@@ -37,11 +37,11 @@ app.get('/', function (req, res) {
 
 app.post('/photo', upload.single('image'), function (req, res) {
   console.log(req.file);
-  // fs.readFile(req.file.buffer, 'utf8', function (err, data) {
-  //   console.log(data);
-  // });
-  // knex('images').insert({image: req.file.buffer}).then(function () {
+  fs.readFile(req.file.fieldname, function (err, data) {
+    console.log(data);
     res.redirect('back');
+  });
+  // knex('images').insert({image: req.file.buffer}).then(function () {
   // });
 });
 
