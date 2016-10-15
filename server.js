@@ -9,7 +9,7 @@ const environment = process.env.NODE_ENV;
 const config = require('./knexfile.js')[environment];
 const knex = require('knex')(config);
 const multer  = require('multer');
-const upload = multer();
+const upload = multer({dest: './uploads'});
 
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -37,12 +37,13 @@ app.get('/', function (req, res) {
 
 app.post('/photo', upload.single('image'), function (req, res) {
   console.log(req.file);
-  fs.readFile(req.file.fieldname, function (err, data) {
+  console.log(req.file.path);
+  fs.readFile(req.file.path, function (err, data) {
     console.log(data);
-    res.redirect('back');
+    knex('images').insert({image: data}).then(function () {
+      res.redirect('back');
+    });
   });
-  // knex('images').insert({image: req.file.buffer}).then(function () {
-  // });
 });
 
 app.listen(PORT, function () {
